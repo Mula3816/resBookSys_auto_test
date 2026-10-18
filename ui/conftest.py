@@ -22,6 +22,10 @@ sys.path.insert(0, PROJECT_ROOT)
 
 import config  # noqa: E402
 
+# 报告目录在全新环境(CI 检出)中不存在,提前创建
+os.makedirs(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'report'),
+            exist_ok=True)
+
 # 断言默认超时 10s(dev 服务下页面加载较慢)
 expect.set_options(timeout=10_000)
 
@@ -55,6 +59,7 @@ def frontend_server():
         yield
         return
 
+    os.makedirs(os.path.dirname(config.UI_SERVER_LOG), exist_ok=True)
     log_file = open(config.UI_SERVER_LOG, 'a', encoding='utf-8')
     proc = subprocess.Popen(
         ['npm', 'start'],

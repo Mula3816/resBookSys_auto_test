@@ -70,6 +70,7 @@ def backend_server(db_cleanup):
         pytest.fail('并发模式下后端未就绪:请先启动服务,'
                     '或使用 ./scripts/run_ci.sh -n auto 运行')
 
+    os.makedirs(os.path.dirname(config.SERVER_LOG), exist_ok=True)
     log_file = open(config.SERVER_LOG, 'a', encoding='utf-8')
     proc = subprocess.Popen(
         ['node', 'server.js'],
