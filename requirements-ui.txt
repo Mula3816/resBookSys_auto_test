@@ -6,6 +6,8 @@ pytest-rerunfailures>=13.0
 greenlet>=3.1
 # playwright 1.46 的另一个依赖(因 --no-deps 被跳过,需显式声明)
 pyee==11.0.1
+# pytest-playwright 0.5.2 的依赖(同样因 --no-deps 被跳过)
+python-slugify>=8.0
 
 # 注:playwright / pytest-playwright 需单独安装(见 CI workflow 与下注):
 #   pip install playwright==1.46.0 pytest-playwright==0.5.2 --no-deps
