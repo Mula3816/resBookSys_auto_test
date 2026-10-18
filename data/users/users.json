@@ -1,0 +1,194 @@
+[
+    {
+        "description": "列表_管理员查看 → 200",
+        "action": "list",
+        "token": "#admin_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_按角色筛选 role=admin → 200 全部为 admin",
+        "action": "list",
+        "token": "#admin_token#",
+        "params": {"role": "admin"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "all_role_admin"}
+    },
+    {
+        "description": "列表_按关键词搜索 search=carlos → 200",
+        "action": "list",
+        "token": "#admin_token#",
+        "params": {"search": "carlos"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_筛选不存在的角色 → 200 空结果",
+        "action": "list",
+        "token": "#admin_token#",
+        "params": {"role": "no_such_role"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "empty"}
+    },
+    {
+        "description": "列表_客户无权限 → 403",
+        "action": "list",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "需要管理员权限"}
+    },
+    {
+        "description": "列表_商家无权限 → 403",
+        "action": "list",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "需要管理员权限"}
+    },
+    {
+        "description": "列表_不携带 token → 401",
+        "action": "list",
+        "token": "",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "详情_管理员查 id=1 → 200 含预订数",
+        "action": "get",
+        "token": "#admin_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "detail", "email": "admin@restaurant.com"}
+    },
+    {
+        "description": "详情_不存在的用户 → 404",
+        "action": "get",
+        "token": "#admin_token#",
+        "params": {"id": 999999},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "用户不存在"}
+    },
+    {
+        "description": "详情_客户无权限 → 403",
+        "action": "get",
+        "token": "#client_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "需要管理员权限"}
+    },
+    {
+        "description": "详情_不携带 token → 401",
+        "action": "get",
+        "token": "",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "改角色_非法角色值 → 400",
+        "action": "update_role",
+        "token": "#admin_token#",
+        "params": {"id": 3},
+        "req_data": {"role": "superadmin"},
+        "response": {"status_code": 400, "message": "角色无效"}
+    },
+    {
+        "description": "改角色_修改自己的角色 → 400",
+        "action": "update_role",
+        "token": "#admin_token#",
+        "params": {"id": 1},
+        "req_data": {"role": "client"},
+        "response": {"status_code": 400, "message": "无法修改自己的角色"}
+    },
+    {
+        "description": "改角色_不存在的用户 → 404",
+        "action": "update_role",
+        "token": "#admin_token#",
+        "params": {"id": 999999},
+        "req_data": {"role": "client"},
+        "response": {"status_code": 404, "message": "用户不存在"}
+    },
+    {
+        "description": "改角色_客户无权限 → 403",
+        "action": "update_role",
+        "token": "#client_token#",
+        "params": {"id": 3},
+        "req_data": {"role": "client"},
+        "response": {"status_code": 403, "message": "需要管理员权限"}
+    },
+    {
+        "description": "改角色_不携带 token → 401",
+        "action": "update_role",
+        "token": "",
+        "params": {"id": 3},
+        "req_data": {"role": "client"},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "删除_删除自己的账号 → 400",
+        "action": "delete",
+        "token": "#admin_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "无法删除自己的账号"}
+    },
+    {
+        "description": "删除_存在有效预订的用户 → 400",
+        "action": "delete",
+        "token": "#admin_token#",
+        "params": {"id": 3},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "无法删除该用户，其存在有效预订。"}
+    },
+    {
+        "description": "删除_不存在的用户 → 404",
+        "action": "delete",
+        "token": "#admin_token#",
+        "params": {"id": 999999},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "用户不存在"}
+    },
+    {
+        "description": "删除_客户无权限 → 403",
+        "action": "delete",
+        "token": "#client_token#",
+        "params": {"id": 3},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "需要管理员权限"}
+    },
+    {
+        "description": "删除_不携带 token → 401",
+        "action": "delete",
+        "token": "",
+        "params": {"id": 3},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "统计_管理员查看仪表盘 → 200",
+        "action": "stats",
+        "token": "#admin_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "stats"}
+    },
+    {
+        "description": "统计_客户无权限 → 403",
+        "action": "stats",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "需要管理员权限"}
+    },
+    {
+        "description": "统计_不携带 token → 401",
+        "action": "stats",
+        "token": "",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    }
+]

@@ -1,0 +1,218 @@
+[
+    {
+        "description": "列表_按餐厅查询(餐厅 1) → 200",
+        "action": "list",
+        "token": "#guest#",
+        "params": {"restaurant_id": "1"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_不存在的餐厅 → 200 空结果",
+        "action": "list",
+        "token": "#guest#",
+        "params": {"restaurant_id": "999999"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "empty"}
+    },
+    {
+        "description": "列表_状态筛选 available → 200",
+        "action": "list",
+        "token": "#guest#",
+        "params": {"restaurant_id": "1", "status": "available"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_编号搜索 1-1 → 200",
+        "action": "list",
+        "token": "#guest#",
+        "params": {"search": "1-1"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "详情_查看桌台 1 → 200",
+        "action": "get",
+        "token": "#guest#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "detail"}
+    },
+    {
+        "description": "详情_不存在的桌台 → 404",
+        "action": "get",
+        "token": "#guest#",
+        "params": {"id": 999999},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "桌台不存在"}
+    },
+    {
+        "description": "可用时段_桌台 1 种子预订日(存在不可用时段) → 200",
+        "action": "availability",
+        "token": "#guest#",
+        "params": {"id": 1, "date": "2026-03-13"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "has_unavailable_slot"}
+    },
+    {
+        "description": "可用时段_缺少日期 → 400",
+        "action": "availability",
+        "token": "#guest#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "日期为必填项"}
+    },
+    {
+        "description": "可用时段_不存在的桌台 → 404",
+        "action": "availability",
+        "token": "#guest#",
+        "params": {"id": 999999, "date": "2026-12-15"},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "桌台不存在"}
+    },
+    {
+        "description": "创建_空请求体 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "餐厅 ID 无效"}
+    },
+    {
+        "description": "创建_桌台编号过长(11 位) → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_number": "12345678901", "capacity": 4},
+        "response": {"status_code": 400, "message": "桌台编号无效"}
+    },
+    {
+        "description": "创建_容量非法(21) → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_number": "T9", "capacity": 21},
+        "response": {"status_code": 400, "message": "容量必须介于 1 到 20 之间"}
+    },
+    {
+        "description": "创建_桌台类型非法 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_number": "T9", "capacity": 4, "table_type": "luxury"},
+        "response": {"status_code": 400, "message": "桌台类型无效"}
+    },
+    {
+        "description": "创建_状态非法 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_number": "T9", "capacity": 4, "status": "broken"},
+        "response": {"status_code": 400, "message": "状态无效"}
+    },
+    {
+        "description": "创建_重复桌台编号(1-1) → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_number": "1-1", "capacity": 4},
+        "response": {"status_code": 400, "message": "该餐厅已存在此桌台编号"}
+    },
+    {
+        "description": "创建_商家在他人餐厅建桌台(平台自营) → 403",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 4, "table_number": "T9", "capacity": 4},
+        "response": {"status_code": 403, "message": "无权操作其他商家的餐厅"}
+    },
+    {
+        "description": "创建_客户无权限 → 403",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_number": "auto_test_T1", "capacity": 4},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "创建_不携带 token → 401",
+        "action": "create",
+        "token": "",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_number": "auto_test_T1", "capacity": 4},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "更新_空请求体 → 400",
+        "action": "update",
+        "token": "#admin_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "没有可更新的字段"}
+    },
+    {
+        "description": "更新_商家改他人餐厅的桌台(桌台 37) → 403",
+        "action": "update",
+        "token": "#merchant_token#",
+        "params": {"id": 37},
+        "req_data": {"capacity": 6},
+        "response": {"status_code": 403, "message": "无权操作其他商家的餐厅"}
+    },
+    {
+        "description": "更新_不存在的桌台 → 404",
+        "action": "update",
+        "token": "#admin_token#",
+        "params": {"id": 999999},
+        "req_data": {"capacity": 6},
+        "response": {"status_code": 404, "message": "桌台不存在"}
+    },
+    {
+        "description": "更新_客户无权限 → 403",
+        "action": "update",
+        "token": "#client_token#",
+        "params": {"id": 1},
+        "req_data": {"capacity": 6},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "删除_有有效预订的桌台(桌台 1) → 400",
+        "action": "delete",
+        "token": "#admin_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "无法删除该桌台，其存在有效预订。"}
+    },
+    {
+        "description": "删除_商家删他人餐厅的桌台(桌台 37) → 403",
+        "action": "delete",
+        "token": "#merchant_token#",
+        "params": {"id": 37},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "无权操作其他商家的餐厅"}
+    },
+    {
+        "description": "删除_不存在的桌台 → 404",
+        "action": "delete",
+        "token": "#admin_token#",
+        "params": {"id": 999999},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "桌台不存在"}
+    },
+    {
+        "description": "删除_客户无权限 → 403",
+        "action": "delete",
+        "token": "#client_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "删除_不携带 token → 401",
+        "action": "delete",
+        "token": "",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    }
+]

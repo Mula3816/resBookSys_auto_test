@@ -1,0 +1,30 @@
+[
+    {
+        "description": "携带有效 token → 200,返回当前用户及统计信息",
+        "req_data": {
+            "token": "#login_token#"
+        },
+        "response": {
+            "status_code": 200,
+            "email": "carlos.rodriguez@email.com"
+        }
+    },
+    {
+        "description": "不携带 token → 401",
+        "req_data": {},
+        "response": {
+            "status_code": 401,
+            "message": "需要提供身份验证令牌"
+        }
+    },
+    {
+        "description": "伪造 token → 403",
+        "req_data": {
+            "token": "invalid.token.here"
+        },
+        "response": {
+            "status_code": 403,
+            "message": "令牌无效或已过期"
+        }
+    }
+]

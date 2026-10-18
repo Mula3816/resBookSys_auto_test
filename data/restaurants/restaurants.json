@@ -1,0 +1,282 @@
+[
+    {
+        "description": "列表_游客浏览餐厅 → 200",
+        "action": "list",
+        "token": "#guest#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_按菜系筛选(中餐) → 200",
+        "action": "list",
+        "token": "#guest#",
+        "params": {"cuisine_type": "中餐"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_关键词搜索(La Mar) → 200",
+        "action": "list",
+        "token": "#guest#",
+        "params": {"search": "La Mar"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_评分下限筛选 min_rating=5.1 → 200 空结果",
+        "action": "list",
+        "token": "#guest#",
+        "params": {"min_rating": "5.1"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "empty"}
+    },
+    {
+        "description": "列表_筛选不存在的菜系 → 200 空结果",
+        "action": "list",
+        "token": "#guest#",
+        "params": {"cuisine_type": "不存在的菜系"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "empty"}
+    },
+    {
+        "description": "列表_分页 limit=1 → 200 只返回 1 条",
+        "action": "list",
+        "token": "#guest#",
+        "params": {"limit": "1"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "limit_ok"}
+    },
+    {
+        "description": "统计_游客查看 → 200",
+        "action": "stats",
+        "token": "#guest#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "stats"}
+    },
+    {
+        "description": "统计_按归属人筛选 owner_id=2 → 200",
+        "action": "stats",
+        "token": "#guest#",
+        "params": {"owner_id": "2"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "stats"}
+    },
+    {
+        "description": "详情_查看餐厅 1(含桌台) → 200",
+        "action": "get",
+        "token": "#guest#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "detail"}
+    },
+    {
+        "description": "详情_不存在的餐厅 → 404",
+        "action": "get",
+        "token": "#guest#",
+        "params": {"id": 999999},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "餐厅不存在"}
+    },
+    {
+        "description": "可用时段_餐厅 1 指定日期 → 200",
+        "action": "availability",
+        "token": "#guest#",
+        "params": {"id": 1, "date": "2026-03-13"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "availability"}
+    },
+    {
+        "description": "可用时段_缺少日期 → 400",
+        "action": "availability",
+        "token": "#guest#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "日期为必填项"}
+    },
+    {
+        "description": "可用时段_不存在的餐厅 → 404",
+        "action": "availability",
+        "token": "#guest#",
+        "params": {"id": 999999, "date": "2026-12-15"},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "餐厅不存在"}
+    },
+    {
+        "description": "创建_空请求体 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "姓名长度必须为 2-100 个字符"}
+    },
+    {
+        "description": "创建_姓名过短 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"name": "A", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "active"},
+        "response": {"status_code": 400, "message": "姓名长度必须为 2-100 个字符"}
+    },
+    {
+        "description": "创建_描述过短 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "太短", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "active"},
+        "response": {"status_code": 400, "message": "描述长度必须为 10-1000 个字符"}
+    },
+    {
+        "description": "创建_菜系非法 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "川菜", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "active"},
+        "response": {"status_code": 400, "message": "菜系类型无效"}
+    },
+    {
+        "description": "创建_地址过短 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "短地址", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "active"},
+        "response": {"status_code": 400, "message": "地址长度必须为 10-200 个字符"}
+    },
+    {
+        "description": "创建_电话非法 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "123", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "active"},
+        "response": {"status_code": 400, "message": "电话长度必须为 10-20 个字符"}
+    },
+    {
+        "description": "创建_邮箱非法 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "invalid-email", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "active"},
+        "response": {"status_code": 400, "message": "邮箱格式无效"}
+    },
+    {
+        "description": "创建_容量非法(0) → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 0, "status": "active"},
+        "response": {"status_code": 400, "message": "容量必须介于 1 到 1000 之间"}
+    },
+    {
+        "description": "创建_评分越界(6) → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "rating": 6, "status": "active"},
+        "response": {"status_code": 400, "message": "评分必须介于 0 到 5 之间"}
+    },
+    {
+        "description": "创建_状态非法 → 400",
+        "action": "create",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "closed"},
+        "response": {"status_code": 400, "message": "状态无效"}
+    },
+    {
+        "description": "创建_归属人ID非法(管理员指定) → 400",
+        "action": "create",
+        "token": "#admin_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "active", "owner_id": "abc"},
+        "response": {"status_code": 400, "message": "归属人 ID 无效"}
+    },
+    {
+        "description": "创建_客户无权限 → 403",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "active"},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "创建_不携带 token → 401",
+        "action": "create",
+        "token": "",
+        "params": {},
+        "req_data": {"name": "auto_test_参数校验", "description": "这是一家接口测试创建的中餐厅", "cuisine_type": "中餐", "address": "北京市朝阳区测试路 1 号", "phone": "13800138000", "email": "test@test.com", "opening_time": "11:00", "closing_time": "23:00", "capacity": 100, "status": "active"},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "更新_空请求体(商家改自己的店) → 400",
+        "action": "update",
+        "token": "#merchant_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "没有可更新的字段"}
+    },
+    {
+        "description": "更新_商家改他人餐厅(平台自营) → 403",
+        "action": "update",
+        "token": "#merchant_token#",
+        "params": {"id": 4},
+        "req_data": {"name": "非法改名"},
+        "response": {"status_code": 403, "message": "无权操作其他商家的餐厅"}
+    },
+    {
+        "description": "更新_不存在的餐厅 → 404",
+        "action": "update",
+        "token": "#admin_token#",
+        "params": {"id": 999999},
+        "req_data": {"name": "新名字"},
+        "response": {"status_code": 404, "message": "餐厅不存在"}
+    },
+    {
+        "description": "更新_客户无权限 → 403",
+        "action": "update",
+        "token": "#client_token#",
+        "params": {"id": 1},
+        "req_data": {"name": "新名字"},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "更新_不携带 token → 401",
+        "action": "update",
+        "token": "",
+        "params": {"id": 1},
+        "req_data": {"name": "新名字"},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "删除_商家删他人餐厅(平台自营) → 403",
+        "action": "delete",
+        "token": "#merchant_token#",
+        "params": {"id": 4},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "无权操作其他商家的餐厅"}
+    },
+    {
+        "description": "删除_不存在的餐厅 → 404",
+        "action": "delete",
+        "token": "#admin_token#",
+        "params": {"id": 999999},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "餐厅不存在"}
+    },
+    {
+        "description": "删除_客户无权限 → 403",
+        "action": "delete",
+        "token": "#client_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "删除_不携带 token → 401",
+        "action": "delete",
+        "token": "",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    }
+]

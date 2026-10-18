@@ -1,0 +1,20 @@
+{
+  "client": {
+    "name": "Carlos Rodríguez",
+    "email": "carlos.rodriguez@email.com",
+    "password": "password123",
+    "role": "client"
+  },
+  "merchant": {
+    "name": "商家演示",
+    "email": "owner@restaurant.com",
+    "password": "owner123",
+    "role": "merchant"
+  },
+  "admin": {
+    "name": "Administrador",
+    "email": "admin@restaurant.com",
+    "password": "admin123",
+    "role": "admin"
+  }
+}

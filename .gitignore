@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# 测试报告(CI 产物,不入库)
+report/
+
+# 面试准备文档(仅本地使用,不入库)
+面试项目总结.md

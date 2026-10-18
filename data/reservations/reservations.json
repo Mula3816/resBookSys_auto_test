@@ -1,0 +1,330 @@
+[
+    {
+        "description": "列表_客户查看自己的预订 → 200",
+        "action": "list",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_商家查看 → 200",
+        "action": "list",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_管理员查看全部 → 200",
+        "action": "list",
+        "token": "#admin_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_按状态筛选 status=confirmed → 200",
+        "action": "list",
+        "token": "#client_token#",
+        "params": {"status": "confirmed"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "non_empty"}
+    },
+    {
+        "description": "列表_筛选不存在的状态 → 200 空结果",
+        "action": "list",
+        "token": "#client_token#",
+        "params": {"status": "no_such_status"},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "empty"}
+    },
+    {
+        "description": "列表_不携带 token → 401",
+        "action": "list",
+        "token": "",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "列表_伪造 token → 403",
+        "action": "list",
+        "token": "invalid.token.here",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "令牌无效或已过期"}
+    },
+    {
+        "description": "详情_本人预订含状态历史 → 200",
+        "action": "get",
+        "token": "#client_token#",
+        "params": {"id": 3},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "has_history"}
+    },
+    {
+        "description": "详情_查看他人预订 → 404(越权视为不存在)",
+        "action": "get",
+        "token": "#client_token#",
+        "params": {"id": 2},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "预订不存在"}
+    },
+    {
+        "description": "详情_不存在的预订 → 404",
+        "action": "get",
+        "token": "#client_token#",
+        "params": {"id": 999999},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "预订不存在"}
+    },
+    {
+        "description": "详情_商家查看自己餐厅的预订 → 200",
+        "action": "get",
+        "token": "#merchant_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "has_history"}
+    },
+    {
+        "description": "详情_不携带 token → 401",
+        "action": "get",
+        "token": "",
+        "params": {"id": 3},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "创建_空请求体 → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "餐厅 ID 无效"}
+    },
+    {
+        "description": "创建_餐厅ID非法(0) → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 0, "table_id": 1, "reservation_date": "2026-12-15", "reservation_time": "19:00", "party_size": 2},
+        "response": {"status_code": 400, "message": "餐厅 ID 无效"}
+    },
+    {
+        "description": "创建_桌台ID非法 → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 0, "reservation_date": "2026-12-15", "reservation_time": "19:00", "party_size": 2},
+        "response": {"status_code": 400, "message": "桌台 ID 无效"}
+    },
+    {
+        "description": "创建_日期格式非法 → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 1, "reservation_date": "15/12/2026", "reservation_time": "19:00", "party_size": 2},
+        "response": {"status_code": 400, "message": "日期无效"}
+    },
+    {
+        "description": "创建_时间格式非法 → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 1, "reservation_date": "2026-12-15", "reservation_time": "25:00", "party_size": 2},
+        "response": {"status_code": 400, "message": "时间格式无效"}
+    },
+    {
+        "description": "创建_人数为0 → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 1, "reservation_date": "2026-12-15", "reservation_time": "19:00", "party_size": 0},
+        "response": {"status_code": 400, "message": "人数必须介于 1 到 20 之间"}
+    },
+    {
+        "description": "创建_人数超上限21 → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 1, "reservation_date": "2026-12-15", "reservation_time": "19:00", "party_size": 21},
+        "response": {"status_code": 400, "message": "人数必须介于 1 到 20 之间"}
+    },
+    {
+        "description": "创建_桌台不属于该餐厅 → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 13, "reservation_date": "2026-12-15", "reservation_time": "19:00", "party_size": 2},
+        "response": {"status_code": 400, "message": "该餐厅下未找到此桌台"}
+    },
+    {
+        "description": "创建_人数超出桌台容量 → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 1, "reservation_date": "2026-12-15", "reservation_time": "19:00", "party_size": 3},
+        "response": {"status_code": 400, "message": "人数超出桌台容量"}
+    },
+    {
+        "description": "创建_与种子预订时段冲突(2小时内) → 400",
+        "action": "create",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 1, "reservation_date": "2026-03-13", "reservation_time": "20:00", "party_size": 2},
+        "response": {"status_code": 400, "message": "该时段桌台不可用"}
+    },
+    {
+        "description": "创建_不携带 token → 401",
+        "action": "create",
+        "token": "",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 1, "reservation_date": "2026-12-15", "reservation_time": "19:00", "party_size": 2},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "创建_伪造 token → 403",
+        "action": "create",
+        "token": "invalid.token.here",
+        "params": {},
+        "req_data": {"restaurant_id": 1, "table_id": 1, "reservation_date": "2026-12-15", "reservation_time": "19:00", "party_size": 2},
+        "response": {"status_code": 403, "message": "令牌无效或已过期"}
+    },
+    {
+        "description": "改状态_非法状态值 → 400",
+        "action": "update_status",
+        "token": "#admin_token#",
+        "params": {"id": 1},
+        "req_data": {"status": "invalid_status"},
+        "response": {"status_code": 400, "message": "状态无效"}
+    },
+    {
+        "description": "改状态_客户无权限 → 403",
+        "action": "update_status",
+        "token": "#client_token#",
+        "params": {"id": 1},
+        "req_data": {"status": "confirmed"},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "改状态_商家改自己餐厅的预订(confirmed→confirmed) → 200",
+        "action": "update_status",
+        "token": "#merchant_token#",
+        "params": {"id": 1},
+        "req_data": {"status": "confirmed"},
+        "response": {"status_code": 200, "message": "预订状态更新成功"}
+    },
+    {
+        "description": "改状态_不存在的预订 → 404",
+        "action": "update_status",
+        "token": "#admin_token#",
+        "params": {"id": 999999},
+        "req_data": {"status": "confirmed"},
+        "response": {"status_code": 404, "message": "预订不存在"}
+    },
+    {
+        "description": "取消_取消他人预订 → 404(越权视为不存在)",
+        "action": "cancel",
+        "token": "#client_token#",
+        "params": {"id": 1},
+        "req_data": {"reason": "测试"},
+        "response": {"status_code": 404, "message": "预订不存在"}
+    },
+    {
+        "description": "取消_不存在的预订 → 404",
+        "action": "cancel",
+        "token": "#client_token#",
+        "params": {"id": 999999},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "预订不存在"}
+    },
+    {
+        "description": "取消_不携带 token → 401",
+        "action": "cancel",
+        "token": "",
+        "params": {"id": 3},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "付款_非已完成预订 → 400",
+        "action": "payment",
+        "token": "#merchant_token#",
+        "params": {"id": 1},
+        "req_data": {"total_amount": 100},
+        "response": {"status_code": 400, "message": "仅可为已完成的预订登记付款"}
+    },
+    {
+        "description": "付款_金额非法(负数) → 400",
+        "action": "payment",
+        "token": "#merchant_token#",
+        "params": {"id": 1},
+        "req_data": {"total_amount": -5},
+        "response": {"status_code": 400, "message": "总金额必须为正数"}
+    },
+    {
+        "description": "付款_客户无权限 → 403",
+        "action": "payment",
+        "token": "#client_token#",
+        "params": {"id": 1},
+        "req_data": {"total_amount": 100},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "删除_已确认预订不可删 → 400",
+        "action": "delete",
+        "token": "#admin_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 400, "message": "无法删除待确认或已确认的预订。仅可删除已完成或已取消的预订。"}
+    },
+    {
+        "description": "删除_不存在的预订 → 404",
+        "action": "delete",
+        "token": "#admin_token#",
+        "params": {"id": 999999},
+        "req_data": {},
+        "response": {"status_code": 404, "message": "预订不存在"}
+    },
+    {
+        "description": "删除_客户无权限 → 403",
+        "action": "delete",
+        "token": "#client_token#",
+        "params": {"id": 1},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "统计_管理员查看仪表盘 → 200",
+        "action": "stats",
+        "token": "#admin_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "stats"}
+    },
+    {
+        "description": "统计_商家查看仪表盘 → 200",
+        "action": "stats",
+        "token": "#merchant_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 200, "check": "stats"}
+    },
+    {
+        "description": "统计_客户无权限 → 403",
+        "action": "stats",
+        "token": "#client_token#",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 403, "message": "需要管理员或商家权限"}
+    },
+    {
+        "description": "统计_不携带 token → 401",
+        "action": "stats",
+        "token": "",
+        "params": {},
+        "req_data": {},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    }
+]

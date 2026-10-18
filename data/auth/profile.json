@@ -1,0 +1,38 @@
+[
+    {
+        "description": "修改资料_同名更新 → 200",
+        "token": "#client_token#",
+        "req_data": {"name": "Carlos Rodríguez"},
+        "response": {"status_code": 200, "message": "个人资料更新成功"}
+    },
+    {
+        "description": "修改资料_姓名过短 → 400",
+        "token": "#client_token#",
+        "req_data": {"name": "A"},
+        "response": {"status_code": 400, "message": "Invalid value"}
+    },
+    {
+        "description": "修改资料_手机号非法 → 400",
+        "token": "#client_token#",
+        "req_data": {"phone": "abc"},
+        "response": {"status_code": 400, "message": "Invalid value"}
+    },
+    {
+        "description": "修改资料_空请求体 → 400",
+        "token": "#client_token#",
+        "req_data": {},
+        "response": {"status_code": 400, "message": "没有可更新的字段"}
+    },
+    {
+        "description": "修改资料_不携带 token → 401",
+        "token": "",
+        "req_data": {"name": "新名字"},
+        "response": {"status_code": 401, "message": "需要提供身份验证令牌"}
+    },
+    {
+        "description": "修改资料_伪造 token → 403",
+        "token": "invalid.token.here",
+        "req_data": {"name": "新名字"},
+        "response": {"status_code": 403, "message": "令牌无效或已过期"}
+    }
+]

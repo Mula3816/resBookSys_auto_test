@@ -1,0 +1,113 @@
+[
+    {
+        "description": "注册成功_客户角色+手机号 → 201,注册后可立即登录",
+        "req_data": {
+            "name": "测试用户",
+            "email": "#unique_email#",
+            "password": "pass123456",
+            "phone": "13800138000"
+        },
+        "response": {
+            "status_code": 201,
+            "message": "用户创建成功",
+            "role": "client",
+            "then_login": true
+        }
+    },
+    {
+        "description": "注册成功_商家角色 → 201",
+        "req_data": {
+            "name": "测试商家",
+            "email": "#unique_email#",
+            "password": "pass123456",
+            "role": "merchant"
+        },
+        "response": {
+            "status_code": 201,
+            "message": "用户创建成功",
+            "role": "merchant"
+        }
+    },
+    {
+        "description": "注册失败_已注册邮箱 → 400",
+        "req_data": {
+            "name": "重复注册",
+            "email": "carlos.rodriguez@email.com",
+            "password": "pass123456"
+        },
+        "response": {
+            "status_code": 400,
+            "message": "该邮箱已被注册"
+        }
+    },
+    {
+        "description": "注册失败_邮箱格式非法 → 400",
+        "req_data": {
+            "name": "测试用户",
+            "email": "invalid-email",
+            "password": "pass123456"
+        },
+        "response": {
+            "status_code": 400,
+            "message": "邮箱格式无效"
+        }
+    },
+    {
+        "description": "注册失败_密码少于6位 → 400",
+        "req_data": {
+            "name": "测试用户",
+            "email": "#unique_email#",
+            "password": "12345"
+        },
+        "response": {
+            "status_code": 400,
+            "message": "密码长度至少为 6 个字符"
+        }
+    },
+    {
+        "description": "注册失败_姓名少于2个字符 → 400",
+        "req_data": {
+            "name": "A",
+            "email": "#unique_email#",
+            "password": "pass123456"
+        },
+        "response": {
+            "status_code": 400,
+            "message": "姓名长度必须为 2-100 个字符"
+        }
+    },
+    {
+        "description": "注册失败_role=admin 自助注册(提权) → 400",
+        "req_data": {
+            "name": "测试用户",
+            "email": "#unique_email#",
+            "password": "pass123456",
+            "role": "admin"
+        },
+        "response": {
+            "status_code": 400,
+            "message": "角色无效"
+        }
+    },
+    {
+        "description": "注册失败_手机号格式非法 → 400",
+        "req_data": {
+            "name": "测试用户",
+            "email": "#unique_email#",
+            "password": "pass123456",
+            "phone": "abc"
+        },
+        "response": {
+            "status_code": 400,
+            "message": "手机号无效"
+        }
+    },
+    {
+        "description": "注册失败_空请求体(缺少必填字段) → 400",
+        "req_data": {},
+        "response": {
+            "status_code": 400,
+            "message": "姓名长度必须为 2-100 个字符"
+        }
+    }
+]
