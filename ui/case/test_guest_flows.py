@@ -24,23 +24,23 @@ def test_restaurants_list_filter_search(guest_context):
     restaurants = RestaurantsPage(page).goto()
 
     # 默认列表包含种子餐厅
-    expect(restaurants.card(1)).to_be_visible()   # La Mar
-    expect(restaurants.card(14)).to_be_visible()  # 全聚德
+    expect(restaurants.card(1)).to_be_visible()  # La Mar(秘鲁菜)
+    expect(restaurants.card(7)).to_be_visible()  # Great Wall Chinese(中餐)
 
-    # 菜系筛选"中餐" → 只剩中餐厅(全聚德)
+    # 菜系筛选"中餐" → 只剩中餐厅
     restaurants.filter_cuisine('中餐')
-    expect(restaurants.card(14)).to_be_visible()
+    expect(restaurants.card(7)).to_be_visible()
     expect(restaurants.card(1)).to_have_count(0)
 
     # 再次点击取消筛选 → 恢复全部
     restaurants.filter_cuisine('中餐')
     expect(restaurants.card(1)).to_be_visible()
-    expect(restaurants.card(14)).to_be_visible()
+    expect(restaurants.card(7)).to_be_visible()
 
     # 搜索 La Mar(防抖后生效,无筛选)
     restaurants.search('La Mar')
     expect(restaurants.card(1)).to_be_visible()
-    expect(restaurants.card(14)).to_have_count(0)
+    expect(restaurants.card(7)).to_have_count(0)
     page.close()
 
 
