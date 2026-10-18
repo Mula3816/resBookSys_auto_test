@@ -89,6 +89,8 @@ jobs:
       - name: 安装 UI 测试依赖与浏览器
         run: |
           pip install -r requirements-ui.txt
+          # playwright 1.46 钉死 greenlet==3.0.3(Python 3.13 无轮子),--no-deps 绕过
+          pip install "playwright==1.46.0" "pytest-playwright==0.5.2" --no-deps
           python3 -m playwright install --with-deps chromium
 
       - name: 安装前端与后端依赖

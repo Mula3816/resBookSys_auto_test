@@ -1,9 +1,16 @@
+# UI 自动化常规依赖
 requests>=2.28
 pytest>=8.0
 pytest-html>=4.0
 pytest-rerunfailures>=13.0
 greenlet>=3.1
-# Ubuntu 20.04 兼容:1.46 是最后一个支持该系统的版本;
-# --no-deps 规避其对 greenlet==3.0.3 的钉死(Python 3.13 无该版本轮子)
-playwright==1.46.0 --no-deps
-pytest-playwright==0.5.2 --no-deps
+# playwright 1.46 的另一个依赖(因 --no-deps 被跳过,需显式声明)
+pyee==11.0.1
+
+# 注:playwright / pytest-playwright 需单独安装(见 CI workflow 与下注):
+#   pip install playwright==1.46.0 pytest-playwright==0.5.2 --no-deps
+# 原因:
+#   1. 1.46 是最后一个支持 Ubuntu 20.04 浏览器构建的版本(本地环境兼容)
+#   2. 1.46 钉死 greenlet==3.0.3,Python 3.13 无该版本轮子 → --no-deps
+#      绕过,greenlet 使用上方 >=3.1 的新版本(API 兼容)
+#   3. 逐行 --no-deps 语法对 pip 版本有要求,CI 环境不兼容,故拆步骤
