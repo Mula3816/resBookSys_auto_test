@@ -6,5 +6,8 @@ __pycache__/
 # 测试报告(CI 产物,不入库)
 report/
 
+# Playwright 产物(截图/trace,失败时生成)
+test-results/
+
 # 面试准备文档(仅本地使用,不入库)
 面试项目总结.md

@@ -1,0 +1,9 @@
+requests>=2.28
+pytest>=8.0
+pytest-html>=4.0
+pytest-rerunfailures>=13.0
+greenlet>=3.1
+# Ubuntu 20.04 兼容:1.46 是最后一个支持该系统的版本;
+# --no-deps 规避其对 greenlet==3.0.3 的钉死(Python 3.13 无该版本轮子)
+playwright==1.46.0 --no-deps
+pytest-playwright==0.5.2 --no-deps

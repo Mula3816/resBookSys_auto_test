@@ -1,8 +1,9 @@
-# 餐厅订位系统 —— 接口自动化测试
+# 餐厅订位系统 —— 接口 + UI 自动化测试
 
-针对 `/mnt/restaurant-booking-system-master/backend` 的接口自动化测试,
-覆盖认证、预定、用户管理、餐厅、桌台五个模块(共 163 个用例),
-支持 CI、失败重试、并发执行与测试数据自动清理。
+针对 `/mnt/restaurant-booking-system-master` 的双层自动化测试:
+- **接口层**:覆盖认证、预定、用户管理、餐厅、桌台 5 模块 30 接口共 163 个用例
+- **UI 层**:Playwright + POM 的 P0 冒烟用例 10 条(游客浏览/登录注册/预订链路/管理后台)
+- 支持 CI、失败重试、并发执行与测试数据自动清理
 
 ## 目录结构
 
@@ -38,8 +39,14 @@ resBookSys_api_test/
 │   ├── test_restaurants.py   # 餐厅模块用例(JSON 数据驱动 + 开店链路/级联行为)
 │   ├── test_tables.py        # 桌台模块用例(JSON 数据驱动)
 │   └── test_users.py         # 用户管理用例(JSON 数据驱动 + 管理链路)
+├── ui/                       # UI 自动化子项目(Playwright + POM)
+│   ├── conftest.py           # 复用根 fixtures;自动拉起前端;按角色注入登录态
+│   ├── pages/                # 页面对象(登录/注册/餐厅列表/详情/预订)
+│   ├── case/                 # P0 冒烟用例(10 条)
+│   └── pytest.ini            # 失败截图 + trace + 重试
 └── report/
-    ├── report.html           # pytest-html 测试报告
+    ├── report.html           # 接口测试报告
+    ├── ui_report.html        # UI 测试报告(ui/report/ 下)
     └── server.log            # 自动拉起后端时的运行日志
 ```
 
@@ -47,11 +54,12 @@ resBookSys_api_test/
 
 ```bash
 cd /mnt/resBookSys_api_test
-python3 -m pytest                          # 串行运行全部用例(生成报告)
+python3 -m pytest                          # 串行运行全部接口用例(生成报告)
 python3 -m pytest -v                       # 详细输出
 python3 -m pytest case/test_users.py       # 只跑用户管理模块
 ./scripts/run_ci.sh -n auto                # 并发运行(CI 全流程模拟)
 ./scripts/run_ci.sh                        # 本地模拟 CI 全流程(串行)
+cd ui && python3 -m pytest                 # 运行 UI 用例(自动拉起前后端)
 ```
 
 - 被测服务默认 `http://localhost:5000`,可用环境变量覆盖:
@@ -64,14 +72,14 @@ python3 -m pytest case/test_users.py       # 只跑用户管理模块
 
 ## CI 集成(GitHub Actions)
 
-`.github/workflows/api-tests.yml` 在 push/PR 时:
+`.github/workflows/api-tests.yml` 在 push/PR 时,两个 job 并行:
 
-1. 检出测试仓库与被测系统仓库(需把 `repository` 改为实际后端仓库地址)
-2. 安装 Python/Node 依赖
-3. 重建环境:`cp .env.example .env` → `npm run init-db` → 种子数据脚本
-4. 启动后端 → 运行 `pytest` → 上传 HTML 报告到 Artifact
+- **api-tests**:检出两个仓库 → 装依赖 → 重建环境(`.env` → init-db → 种子)
+  → 运行 163 个接口用例 → 归档报告
+- **ui-tests**:装 Playwright 浏览器 → 重建环境 → 运行 10 条 UI 用例
+  (conftest 自动拉起前后端)→ 归档报告与失败截图/trace
 
-本地可用 `./scripts/run_ci.sh` 模拟同一流程(已在全新数据库上验证通过)。
+本地可用 `./scripts/run_ci.sh` 模拟接口层流程(已在全新数据库上验证通过)。
 
 ## 覆盖范围(163 个用例)
 
@@ -85,6 +93,7 @@ python3 -m pytest case/test_users.py       # 只跑用户管理模块
 | 餐厅 | GET/POST/PUT/DELETE /api/restaurants | `data/restaurants/restaurants.json` | 列表(菜系/搜索/评分/分页)、统计、详情含桌台、可用时段、创建(13 项字段校验/权限)、更新、删除;另有开店链路(含图片上传)与删除级联行为观察两个链路用例 |
 | 桌台 | GET/POST/PUT/DELETE /api/tables | `data/tables/tables.json` | 列表(按餐厅/状态/编号搜索)、详情、可用时段(含不可用时段校验)、创建(编号重复/类型/状态/归属越权)、更新、删除(有有效预订保护) |
 | 用户管理 | GET/PUT/DELETE /api/users | `data/users/users.json` | 列表(筛选/搜索/权限)、详情(含预订数)、改角色(自改禁止/非法值)、删除(自删禁止/有有效预订禁止)、统计;另有注册→查询→改角色→删除链路用例 |
+| UI 层 | 前端页面(P0 冒烟) | `ui/case/*.py` | 游客浏览(首页/列表/筛选/搜索/详情)、登录(成功/密码错误)、注册、预订核心链路(查时段→选时段→确认→我的预订)、取消交互(prompt)、管理后台冒烟(admin/merchant) |
 
 ## 说明
 

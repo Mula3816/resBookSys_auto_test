@@ -26,10 +26,10 @@ def clean_flow_reservations():
     链路用例开头调用:若上一次运行/重试中途失败,残留的 pending 预订
     无法通过 API 删除(接口只允许删 completed/cancelled),只能直连清理。
     """
-    placeholders = ','.join('?' * len(config.FLOW_RESERVATION_DATES))
+    placeholders = ','.join('?' * len(config.CLEANUP_RESERVATION_DATES))
     _execute(
         f'DELETE FROM reservations WHERE reservation_date IN ({placeholders})',
-        config.FLOW_RESERVATION_DATES)
+        config.CLEANUP_RESERVATION_DATES)
 
 
 def clean_test_data():

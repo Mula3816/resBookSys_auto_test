@@ -27,6 +27,12 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 # 链路用例使用的预订日期(与数据清理 fixture 保持一致,统一在此管理)
 FLOW_RESERVATION_DATES = ('2026-12-20', '2026-12-21')
 
+# UI 预订链路用例的日期
+UI_BOOKING_DATE = '2026-12-22'
+
+# 数据清理覆盖的全部测试预订日期(API 链路 + UI 链路)
+CLEANUP_RESERVATION_DATES = FLOW_RESERVATION_DATES + (UI_BOOKING_DATE,)
+
 # 被测数据库路径(测试数据自动清理用)
 TEST_DB_PATH = os.path.join(BACKEND_DIR, 'database', 'restaurant.db')
 
@@ -35,3 +41,13 @@ UPLOADS_DIR = os.path.join(BACKEND_DIR, 'uploads')
 
 # 后端服务运行日志(自动拉起时写入)
 SERVER_LOG = os.path.join(BASE_DIR, 'report', 'server.log')
+
+# ---- UI 自动化(ui/ 子项目) ----
+
+# 前端 dev 服务地址与源码目录
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+FRONTEND_DIR = os.getenv(
+    'FRONTEND_DIR', '/mnt/restaurant-booking-system-master/frontend')
+
+# 前端服务运行日志(自动拉起时写入)
+UI_SERVER_LOG = os.path.join(BASE_DIR, 'report', 'ui_server.log')
